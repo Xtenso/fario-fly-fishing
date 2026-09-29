@@ -50,6 +50,8 @@ Submissions include the topic, the language and every field of the chosen topic.
 
 ## Deployment
 
+Until launch, the site is hidden from search engines: every page has a `noindex` tag and no sitemap is built. When it's ready, set `INDEXABLE = true` in `src/config.ts` and push.
+
 `.github/workflows/deploy.yml` builds and publishes the site on every push to `main`. The first time, set Settings → Pages → Source to **GitHub Actions**.
 
 The workflow asks GitHub for the site's address, so links, canonical URLs and the sitemap are right both at `https://<user>.github.io/fario-fly-fishing/` and on a custom domain (Settings → Pages → Custom domain), with no code changes.

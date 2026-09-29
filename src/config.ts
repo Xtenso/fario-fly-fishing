@@ -1,4 +1,12 @@
-// Site options. The first two are the component props of the Claude Design file.
+// Site options. FLY_LINE and PAGE_TRANSITION are the component props of the Claude Design file.
+// astro.config.mjs imports this file too (for INDEXABLE), outside Vite.
+
+/**
+ * Whether search engines may index the site. While false, every page has
+ * <meta name="robots" content="noindex, nofollow"> and no sitemap is built.
+ * Set to true when the site is ready to launch.
+ */
+export const INDEXABLE = false;
 
 /** The hero's fly line that follows a mouse pointer (and the "Move to cast" hint). */
 export const FLY_LINE = true;
@@ -12,7 +20,7 @@ export const PAGE_TRANSITION: 'fly line' | 'fade' = 'fly line';
  * deploy workflow. Left empty, the form validates and shows its thank-you
  * message but sends nothing — exactly what the design file does.
  */
-export const FORM_ENDPOINT: string = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+export const FORM_ENDPOINT: string = import.meta.env?.PUBLIC_FORM_ENDPOINT ?? '';
 
 /** Shown in the contact page and footer. */
 export const EMAIL = 'hello@fario-smolyan.bg';
