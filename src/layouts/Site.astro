@@ -56,7 +56,9 @@ const preloads = lang === 'bg'
     {Astro.site && indexable && <meta property="og:url" content={canonical} />}
     <meta name="twitter:card" content="summary" />
     <meta name="theme-color" content="#0d1a17" />
+    <link rel="icon" href={BASE + 'favicon.ico'} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={BASE + 'favicon.svg'} />
+    <link rel="apple-touch-icon" href={BASE + 'apple-touch-icon.png'} />
     {preloads.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin="anonymous" />)}
     <script is:inline define:vars={{ base: BASE }}>
       (function () {

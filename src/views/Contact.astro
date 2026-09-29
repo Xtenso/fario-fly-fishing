@@ -137,7 +137,7 @@ const off = (k: Topic) => topic !== k;
 
       <label style="display:flex;flex-direction:column;gap:10px">
         <span data-message-label style={label}>{messageLabel(lang, topic)}</span>
-        <textarea name="message" rows="4" data-checked class="fc-line" style="width:100%;box-sizing:border-box;padding:8px 0 12px;background:transparent;border:0;border-bottom:1px solid;border-bottom-color:rgba(238,241,232,.3);border-radius:0;outline:none;resize:vertical;font-family:inherit;font-size:19px;line-height:1.5;color:#eef1e8;transition:border-color .3s ease"></textarea>
+        <textarea name="message" rows="4" data-checked class="fc-line" style="width:100%;box-sizing:border-box;padding:8px 0 12px;background:transparent;border:0;border-bottom:1px solid;border-bottom-color:rgba(238,241,232,.3);border-radius:0;outline:none;resize:none;font-family:inherit;font-size:19px;line-height:1.5;color:#eef1e8;transition:border-color .3s ease"></textarea>
         <span data-error-for="message" hidden style={error}>{t('Required', 'Задължително поле')}</span>
       </label>
 

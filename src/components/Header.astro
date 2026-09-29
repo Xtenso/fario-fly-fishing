@@ -1,4 +1,5 @@
 ---
+import Logo from '../assets/fario-logo.svg';
 import { LANGS, path, pick, type Lang, type LayoutPage, type Page, type Topic } from '../lib/i18n';
 import { season, seasonDot, seasonText } from '../lib/season';
 
@@ -24,9 +25,10 @@ const langStyle = (l: Lang) =>
 ---
 
 <header data-nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px clamp(20px,3.5vw,48px);border-bottom:1px solid transparent;transition:background-color .4s ease,border-color .4s ease">
-  <a href={path(lang, 'home')} style="display:flex;align-items:center;gap:12px">
-    <span style="flex:none;width:13px;height:13px;border-radius:50%;background:#e2493b;box-shadow:0 0 0 3px #0d1a17,0 0 0 4.5px rgba(238,241,232,.6)"></span>
-    <span style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:26px;letter-spacing:.12em;line-height:1">FARIO</span>
+  {/* The club logo, drawn in the link colour (lime on hover). 46px tall, but it takes
+      the 34px of the old wordmark in the layout, so the header keeps its height. */}
+  <a href={path(lang, 'home')} aria-label="Fario" style="display:flex;align-items:center">
+    <Logo aria-hidden="true" focusable="false" style="display:block;flex:none;width:40.1px;height:46px;margin:-6px 0" />
   </a>
   <nav class="wide-only" style="display:flex;gap:clamp(18px,2.4vw,36px);font-size:15px;font-weight:500">
     {nav.map(([p, label]) => (

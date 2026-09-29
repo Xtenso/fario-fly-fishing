@@ -26,6 +26,7 @@ The design, animations and interactions match the design file. The differences a
 | `src/pages/` | Routes. English at the root, Bulgarian under `bg/`. Each one renders a view. |
 | `src/data/` | Timeline, results, team and activities. Add an entry to add a row. |
 | `src/components/` | Header, menu, footer, page transition overlay, photo slot. |
+| `src/assets/fario-logo.svg` | The club logo (single colour, `currentColor`: it takes the colour of the text around it). |
 | `src/scripts/` | Browser code: hero and fly line, page transition, reveals, timeline, season dial, contact form, language switch. |
 | `src/lib/` | Routes, page titles and descriptions, the trout season. |
 | `src/config.ts` | Options: fly line on or off, page transition style (`'fly line'` or `'fade'`), email and social links. |
