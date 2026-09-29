@@ -1,0 +1,186 @@
+---
+import Site from '../layouts/Site.astro';
+import { EMAIL, FACEBOOK_URL, FORM_ENDPOINT, INSTAGRAM_URL } from '../config';
+import { pick, type Lang, type Topic } from '../lib/i18n';
+import { messageLabel, season, seasonDot, seasonText } from '../lib/season';
+
+interface Props {
+  lang: Lang;
+  /** Preselected topic; /contact/ itself opens on membership. */
+  topic: Topic | null;
+}
+
+const { lang, topic: preselected } = Astro.props;
+const topic: Topic = preselected ?? 'membership';
+const t = pick(lang);
+const en = lang === 'en';
+const s = season();
+
+// Selected / unselected look of the topic buttons and chips (the design's on()).
+const on = (k: boolean) => ({ bg: k ? '#d2f25c' : 'transparent', fg: k ? '#0d1a17' : '#eef1e8', bd: k ? '#d2f25c' : 'rgba(238,241,232,.22)' });
+const topicButton = (k: boolean) => { const c = on(k); return `display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:20px 20px 22px;text-align:left;cursor:pointer;font-family:inherit;border:1px solid;border-color:${c.bd};background:${c.bg};color:${c.fg};transition:background-color .35s ease,color .35s ease,border-color .35s ease`; };
+const chip = (k: boolean) => { const c = on(k); return `padding:12px 18px;border-radius:999px;border:1px solid;border-color:${c.bd};background:${c.bg};color:${c.fg};font-family:inherit;font-size:15px;cursor:pointer;transition:background-color .3s ease,color .3s ease,border-color .3s ease`; };
+
+const kicker = "font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a9b8ae";
+const label = "font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#a9b8ae";
+const field = 'width:100%;box-sizing:border-box;padding:8px 0 12px;background:transparent;border:0;border-bottom:1px solid rgba(238,241,232,.3);border-radius:0;outline:none;font-family:inherit;font-size:21px;color:#eef1e8;transition:border-color .3s ease';
+// Fields that can show an error keep their border colour separate so it can turn red.
+const checked = 'width:100%;box-sizing:border-box;padding:8px 0 12px;background:transparent;border:0;border-bottom:1px solid;border-bottom-color:rgba(238,241,232,.3);border-radius:0;outline:none;font-family:inherit;font-size:21px;color:#eef1e8;transition:border-color .3s ease';
+const error = 'font-size:13px;color:#ff8a78';
+const asideRow = 'display:flex;flex-direction:column;gap:8px;padding:20px 0;border-bottom:1px solid rgba(238,241,232,.14)';
+
+const topics: [Topic, string, string, string][] = [
+  ['membership', '01', t('Membership', 'Членство'), t('Join the club', 'Присъединете се към клуба')],
+  ['competition', '02', t('Competition registration', 'Записване за състезание'), t('Enter a competition', 'Участие в състезание')],
+  ['sponsorship', '03', t('Sponsorship & partners', 'Спонсорство и партньорство'), t('Support the club', 'Подкрепете клуба')],
+  ['general', '04', t('General inquiry', 'Общо запитване'), t('Anything else', 'Всичко останало')],
+];
+const experience: [string, string][] = [
+  ['new', t('New to fly fishing', 'Начинаещ')],
+  ['regular', t('I fish regularly', 'Ловя редовно')],
+  ['compete', t('I compete', 'Състезавам се')],
+];
+const interests: [string, string][] = [
+  ['team', t('Competition team', 'Състезателния отбор')],
+  ['rivers', t('Conservation & stocking', 'Опазване и зарибяване')],
+  ['events', t('Workshops & events', 'Работилници и събития')],
+];
+// Fields that belong to one topic are only shown (and sent) for that topic.
+const only = (k: Topic) => ({ 'data-topic': k, hidden: topic !== k });
+const off = (k: Topic) => topic !== k;
+---
+
+<Site lang={lang} page="contact" topic={preselected}>
+<main>
+<section style="padding:clamp(130px,20vh,210px) clamp(20px,3.5vw,48px) 0">
+  <div data-hero="" style={kicker}>04 — <!---->{t('Contact', 'Контакт')}</div>
+  <h1 data-hero="" style="margin:22px 0 0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(88px,15vw,260px);line-height:.78;text-transform:uppercase;letter-spacing:-.015em">{t('Get in touch', 'Пишете ни')}</h1>
+  <p data-hero="" style="margin:clamp(28px,4vh,44px) 0 0;max-width:640px;font-size:clamp(19px,1.5vw,23px);line-height:1.45;font-weight:300;color:#cdd6ce;text-wrap:pretty">{t('Membership, competitions, partnerships or a question about the rivers. Choose a topic and we’ll get back to you.', 'Членство, състезания, партньорство или въпрос за реките. Изберете тема и ще ви отговорим.')}</p>
+</section>
+<canvas data-ridge="4" aria-hidden="true" style="display:block;width:100%;height:clamp(120px,16vh,180px)"></canvas>
+
+<section style="padding:clamp(56px,8vh,96px) clamp(20px,3.5vw,48px) clamp(100px,15vh,170px);display:flex;flex-wrap:wrap;gap:64px clamp(40px,6vw,110px)">
+  <div style="flex:3 1 560px;min-width:0;display:flex;flex-direction:column;gap:48px">
+    <div data-reveal="" style="display:flex;flex-direction:column;gap:18px">
+      <div style={kicker}>{t('What is it about?', 'За какво се отнася?')}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">
+        {topics.map(([k, n, name, sub]) => (
+          <button type="button" data-topic-pick={k} aria-pressed={k === topic ? 'true' : 'false'} style={topicButton(k === topic)}>
+            <span style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.1em">{n}</span>
+            <span style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase">{name}</span>
+            <span style="font-size:14px;line-height:1.4">{sub}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <form data-contact data-reveal="" method={FORM_ENDPOINT ? 'post' : undefined} action={FORM_ENDPOINT || undefined} style="display:flex;flex-direction:column;gap:36px">
+      <input type="hidden" name="topic" value={topic} />
+      <input type="hidden" name="language" value={lang} />
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:36px 28px">
+        <label style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Name', 'Име и фамилия')}</span>
+          <input name="name" type="text" autocomplete="name" data-checked class="fc-line" style={checked} />
+          <span data-error-for="name" hidden style={error}>{t('Required', 'Задължително поле')}</span>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Email', 'Имейл')}</span>
+          <input name="email" type="text" autocomplete="email" data-checked class="fc-line" style={checked} />
+          <span data-error-for="email" hidden style={error}>{t('Enter a valid email', 'Въведете валиден имейл')}</span>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Phone (optional)', 'Телефон (по желание)')}</span>
+          <input name="phone" type="tel" autocomplete="tel" class="fc-line" style={field} />
+        </label>
+        <label data-tf="" {...only('membership')} style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Town (optional)', 'Населено място (по желание)')}</span>
+          <input name="town" type="text" autocomplete="address-level2" disabled={off('membership')} class="fc-line" style={field} />
+        </label>
+        <label data-tf="" {...only('competition')} style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Competition', 'Състезание')}</span>
+          <input name="event" type="text" placeholder={t('e.g. National championship, round 1', 'напр. Републикански шампионат, 1-ви кръг')} disabled={off('competition')} data-checked class="fc-line" style={checked} />
+          <span data-error-for="event" hidden style={error}>{t('Required', 'Задължително поле')}</span>
+        </label>
+        <label data-tf="" {...only('competition')} style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Team partner (optional)', 'Партньор в отбора (по желание)')}</span>
+          <input name="partner" type="text" disabled={off('competition')} class="fc-line" style={field} />
+        </label>
+        <label data-tf="" {...only('sponsorship')} style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Organisation', 'Организация')}</span>
+          <input name="org" type="text" autocomplete="organization" disabled={off('sponsorship')} data-checked class="fc-line" style={checked} />
+          <span data-error-for="org" hidden style={error}>{t('Required', 'Задължително поле')}</span>
+        </label>
+        <label data-tf="" {...only('sponsorship')} style="display:flex;flex-direction:column;gap:10px">
+          <span style={label}>{t('Website (optional)', 'Уебсайт (по желание)')}</span>
+          <input name="website" type="text" autocomplete="url" disabled={off('sponsorship')} class="fc-line" style={field} />
+        </label>
+      </div>
+
+      <div data-tf="" {...only('membership')} style="display:flex;flex-direction:column;gap:14px">
+        <span style={label}>{t('Experience', 'Опит')}</span>
+        <input type="hidden" name="experience" value="new" disabled={off('membership')} />
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          {experience.map(([k, text]) => (
+            <button type="button" data-exp={k} aria-pressed={k === 'new' ? 'true' : 'false'} style={chip(k === 'new')}>{text}</button>
+          ))}
+        </div>
+      </div>
+      <div data-tf="" {...only('sponsorship')} style="display:flex;flex-direction:column;gap:14px">
+        <span style={label}>{t('Interested in', 'Интерес към')}</span>
+        <input type="hidden" name="interests" value="" disabled={off('sponsorship')} />
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          {interests.map(([k, text]) => (
+            <button type="button" data-interest={k} aria-pressed="false" style={chip(false)}>{text}</button>
+          ))}
+        </div>
+      </div>
+
+      <label style="display:flex;flex-direction:column;gap:10px">
+        <span data-message-label style={label}>{messageLabel(lang, topic)}</span>
+        <textarea name="message" rows="4" data-checked class="fc-line" style="width:100%;box-sizing:border-box;padding:8px 0 12px;background:transparent;border:0;border-bottom:1px solid;border-bottom-color:rgba(238,241,232,.3);border-radius:0;outline:none;resize:vertical;font-family:inherit;font-size:19px;line-height:1.5;color:#eef1e8;transition:border-color .3s ease"></textarea>
+        <span data-error-for="message" hidden style={error}>{t('Required', 'Задължително поле')}</span>
+      </label>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px">
+        <button type="submit" class="hv-lift" style="display:inline-flex;align-items:center;gap:12px;padding:18px 30px;border:0;border-radius:999px;background:#d2f25c;color:#0d1a17;font-family:inherit;font-weight:600;font-size:16px;cursor:pointer;transition:transform .3s ease">{t('Send', 'Изпрати')}<span>→</span></button>
+        <span style="max-width:42ch;font-size:13px;line-height:1.5;color:#a9b8ae">{t('We only use your details to reply to you.', 'Използваме данните ви само за да ви отговорим.')}</span>
+        <span data-send-error hidden style="flex:1 0 100%;font-size:13px;line-height:1.5;color:#ff8a78">{t(`The message could not be sent. Please try again, or email us at ${EMAIL}.`, `Съобщението не можа да бъде изпратено. Опитайте отново или ни пишете на ${EMAIL}.`)}</span>
+      </div>
+    </form>
+
+    <div data-sent hidden style="display:flex;flex-direction:column;align-items:flex-start;gap:24px;padding:clamp(32px,5vw,64px);border:1px solid rgba(238,241,232,.16)">
+      <div style="position:relative;width:132px;height:132px">
+        <span data-ring="" style="position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 1.5px #d2f25c;opacity:0"></span>
+        <span data-ring="" style="position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 1.5px #d2f25c;opacity:0"></span>
+        <span data-ring="" style="position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 1.5px #eef1e8;opacity:0"></span>
+        <span data-dot="" style="position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#e2493b"></span>
+      </div>
+      <h2 data-sx="" style="margin:0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(56px,7vw,110px);line-height:.82;text-transform:uppercase">{t('Message sent.', 'Съобщението е изпратено.')}</h2>
+      <p data-sx="" style="margin:0;max-width:46ch;font-size:18px;line-height:1.55;color:#cdd6ce">{en
+        ? <Fragment>Thank you, <span data-sent-name data-morph-skip></span>. We’ll reply to <span data-sent-email data-morph-skip></span>.</Fragment>
+        : <Fragment>Благодарим, <span data-sent-name data-morph-skip></span>. Ще ви отговорим на <span data-sent-email data-morph-skip></span>.</Fragment>}</p>
+      <button data-sx="" type="button" data-again class="hv-border" style="padding:14px 22px;border:1px solid rgba(238,241,232,.3);border-radius:999px;background:transparent;color:#eef1e8;font-family:inherit;font-weight:500;font-size:15px;cursor:pointer;transition:border-color .3s ease">{t('Send another', 'Ново съобщение')}</button>
+    </div>
+  </div>
+
+  <aside data-reveal="" data-delay="120" style="flex:1 1 260px;align-self:flex-start;display:flex;flex-direction:column;border-top:1px solid rgba(238,241,232,.14)">
+    <div style={asideRow}>
+      <span style={label}>{t('Email', 'Имейл')}</span>
+      <a href={`mailto:${EMAIL}`} style="font-size:19px">{EMAIL}</a>
+    </div>
+    <div style={asideRow}>
+      <span style={label}>{t('Club', 'Клуб')}</span>
+      <span style="font-size:19px;line-height:1.4">{t('Fario · Smolyan, Bulgaria', 'Фарио · Смолян, България')}</span>
+    </div>
+    <div style={asideRow}>
+      <span style={label}>{t('Follow', 'Последвайте ни')}</span>
+      <span style="display:flex;gap:20px;font-size:19px"><a href={FACEBOOK_URL} target="_blank" rel="noopener">Facebook</a><a href={INSTAGRAM_URL} target="_blank" rel="noopener">Instagram</a></span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding:20px 0;border-bottom:1px solid rgba(238,241,232,.14)">
+      <span style={label}>{t('Season', 'Сезон')}</span>
+      <span style="display:flex;align-items:center;gap:10px;font-size:16px;line-height:1.4;color:#cdd6ce"><span data-season-dot style={`flex:none;width:8px;height:8px;border-radius:50%;background:${seasonDot(s)}`}></span><span data-season-text>{seasonText(lang, s)}</span></span>
+    </div>
+  </aside>
+</section>
+</main>
+</Site>

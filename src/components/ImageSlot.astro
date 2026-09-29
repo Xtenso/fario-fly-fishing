@@ -1,0 +1,49 @@
+---
+// A photo, or the design's empty-slot placeholder until there is one.
+// To add a photo, save it as src/assets/photos/<slot id>.jpg (or .png/.webp/.avif),
+// e.g. fario-history-trout.jpg. It is picked up automatically and served
+// resized and compressed, filling the slot like the design's image slots (cover).
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  id: string;
+  /** Caption of the empty slot, as written in the design. */
+  placeholder: string;
+  /** Alt text for the photo. */
+  alt: string;
+  /** Rendered width of the slot, for the responsive image sizes. */
+  sizes?: string;
+}
+
+const { id, placeholder, alt, sizes = '(max-width: 899px) 100vw, 50vw' } = Astro.props;
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const photo = Object.entries(photos).find(([file]) => file.split('/').pop()!.replace(/\.[^.]+$/, '') === id)?.[1].default;
+const widths = photo ? [480, 800, 1200, 1600, 2000].filter((w) => w < photo.width).concat(photo.width) : [];
+---
+
+{photo ? (
+  <Image src={photo} alt={alt} id={id} widths={widths} sizes={sizes} class="photo" />
+) : (
+  <div id={id} class="slot" aria-hidden="true">
+    <div class="frame">
+      <div class="empty">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>
+        <div class="cap">{placeholder}</div>
+      </div>
+      <div class="ring"></div>
+    </div>
+  </div>
+)}
+
+<style>
+  /* The design's <image-slot> element, empty and read-only. */
+  .slot { display: block; position: relative; font: 13px/1.3 system-ui, -apple-system, sans-serif; width: 100%; height: 100%; aspect-ratio: 3/2; }
+  .frame { position: absolute; inset: 0; overflow: hidden; background: rgba(127,127,127,.08); }
+  .empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 12px; box-sizing: border-box; user-select: none; }
+  .empty svg { opacity: .45; }
+  .cap { max-width: 90%; font-weight: 500; letter-spacing: .01em; opacity: .75; }
+  .ring { position: absolute; inset: 0; pointer-events: none; border: 1.5px dashed currentColor; opacity: .35; }
+  .photo { display: block; width: 100%; height: 100%; object-fit: cover; }
+</style>

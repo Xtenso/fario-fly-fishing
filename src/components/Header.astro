@@ -1,0 +1,48 @@
+---
+import { LANGS, path, pick, type Lang, type LayoutPage, type Page, type Topic } from '../lib/i18n';
+import { season, seasonDot, seasonText } from '../lib/season';
+
+interface Props {
+  lang: Lang;
+  page: LayoutPage;
+  topic: Topic | null;
+}
+
+const { lang, page, topic } = Astro.props;
+const t = pick(lang);
+const s = season();
+
+const nav: [Page, string][] = [
+  ['history', t('History', 'История')],
+  ['activities', t('Activities', 'Дейности')],
+  ['achievements', t('Achievements', 'Постижения')],
+  ['contact', t('Contact', 'Контакт')],
+];
+// The EN / BG pill: the current language is filled.
+const langStyle = (l: Lang) =>
+  `display:flex;align-items:center;border:0;cursor:pointer;padding:0 11px;border-radius:999px;font:inherit;letter-spacing:.06em;background:${l === lang ? '#eef1e8' : 'transparent'};color:${l === lang ? '#0d1a17' : '#a9b8ae'};transition:background .3s,color .3s`;
+---
+
+<header data-nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px clamp(20px,3.5vw,48px);border-bottom:1px solid transparent;transition:background-color .4s ease,border-color .4s ease">
+  <a href={path(lang, 'home')} style="display:flex;align-items:center;gap:12px">
+    <span style="flex:none;width:13px;height:13px;border-radius:50%;background:#e2493b;box-shadow:0 0 0 3px #0d1a17,0 0 0 4.5px rgba(238,241,232,.6)"></span>
+    <span style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:26px;letter-spacing:.12em;line-height:1">FARIO</span>
+  </a>
+  <nav class="wide-only" style="display:flex;gap:clamp(18px,2.4vw,36px);font-size:15px;font-weight:500">
+    {nav.map(([p, label]) => (
+      <a href={path(lang, p)} style="display:flex;align-items:center;gap:8px"><span style={`width:6px;height:6px;border-radius:50%;background:#d2f25c;opacity:${page === p ? 1 : 0};transition:opacity .3s ease`}></span>{label}</a>
+    ))}
+  </nav>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="wide-only" style="display:flex;align-items:center;gap:9px;height:34px;padding:0 14px;border:1px solid rgba(238,241,232,.16);border-radius:999px;font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.03em;color:#cdd6ce;white-space:nowrap;box-sizing:border-box">
+      <span data-season-dot style={`width:7px;height:7px;border-radius:50%;background:${seasonDot(s)}`}></span>
+      <span data-season-text>{seasonText(lang, s)}</span>
+    </div>
+    <div style="display:flex;height:34px;padding:3px;border:1px solid rgba(238,241,232,.16);border-radius:999px;font-family:'Martian Mono',monospace;font-size:10.5px;box-sizing:border-box">
+      {LANGS.map((l) => (
+        <a data-lang-switch={l} data-morph-style href={path(l, page, topic)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined} style={langStyle(l)}>{l.toUpperCase()}</a>
+      ))}
+    </div>
+    <button type="button" class="narrow-only" data-menu-toggle aria-expanded="false" style="height:34px;padding:0 16px;border:1px solid rgba(238,241,232,.16);border-radius:999px;background:transparent;color:#eef1e8;cursor:pointer;font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase"><span data-menu-label="closed">{t('Menu', 'Меню')}</span><span data-menu-label="open" hidden>{t('Close', 'Затвори')}</span></button>
+  </div>
+</header>

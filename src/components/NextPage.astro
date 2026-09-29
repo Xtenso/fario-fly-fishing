@@ -1,0 +1,16 @@
+---
+// The large "Next — 02 / Activities →" link at the end of a page.
+interface Props {
+  href: string;
+  kicker: string;
+  title: string;
+  border?: boolean;
+}
+
+const { href, kicker, title, border = true } = Astro.props;
+---
+
+<a href={href} data-reveal="" class="hv-fill" style={`display:flex;flex-direction:column;gap:16px;padding:clamp(56px,9vh,110px) clamp(20px,3.5vw,48px);${border ? 'border-top:1px solid rgba(238,241,232,.14);' : ''}background-image:linear-gradient(#d2f25c,#d2f25c);background-repeat:no-repeat;background-position:0 100%;background-size:100% 0%;transition:background-size .7s cubic-bezier(.7,0,.2,1),color .4s ease`}>
+  <span style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">{kicker}</span>
+  <span style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(72px,12vw,200px);line-height:.8;text-transform:uppercase;letter-spacing:-.01em">{title}</span>
+</a>

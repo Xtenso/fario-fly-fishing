@@ -1,0 +1,27 @@
+{
+  "name": "fario-fly-fishing",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website of Fario, a fly fishing club from Smolyan, Bulgaria.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.5",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/leaflet": "^1.9.22",
+    "typescript": "^6.0.3"
+  }
+}

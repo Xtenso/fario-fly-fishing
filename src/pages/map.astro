@@ -1,0 +1,30 @@
+---
+// The "Rhodope waters" map, embedded in the home page's "Where we fish" section.
+// Options: ?theme=night|paper|skin (the site uses night) and ?lang=en|bg; the
+// parent page also switches its language with a { type: 'fario-lang' } message.
+import 'leaflet/dist/leaflet.css';
+import '../styles/map-fonts.css';
+import '../styles/map.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Fario — Rhodope waters</title>
+  </head>
+  <body data-theme="night">
+    <div id="map" role="application" aria-label="Map of the Rhodope rivers fished by Fario"></div>
+    <aside id="panel">
+      <header><span id="t-beats"></span><button id="all" type="button"></button></header>
+      <ol id="list"></ol>
+      <section id="detail" aria-live="polite"></section>
+    </aside>
+    <div id="ctrl"><button type="button" data-z="1" aria-label="Zoom in">+</button><button type="button" data-z="-1" aria-label="Zoom out">−</button></div>
+    <div id="hint"></div>
+    <script>
+      import '../scripts/map';
+    </script>
+  </body>
+</html>

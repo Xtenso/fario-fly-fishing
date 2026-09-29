@@ -1,0 +1,44 @@
+/* Page baseline the design runtime applied to every full-page render. */
+html, body { height: 100%; margin: 0; }
+
+/* The design's own page styles (its <helmet> block). */
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #0d1a17; color: #eef1e8; -webkit-font-smoothing: antialiased; }
+a { color: #eef1e8; text-decoration: none; }
+a:hover { color: #d2f25c; }
+::selection { background: #d2f25c; color: #0d1a17; }
+input::placeholder, textarea::placeholder { color: #7d8f86; }
+
+/* Scripts show and hide elements that carry an inline display value. */
+[hidden] { display: none !important; }
+
+/* Until the page script has prepared the intro animations the page stays
+   blank, as the design did before its runtime rendered. The boot script in
+   <head> sets the class, and removes it itself if the page script never runs. */
+html.fario-boot #root { visibility: hidden; }
+
+/* The design switched layouts on window.innerWidth < 900. */
+@media (max-width: 899.98px) { .wide-only { display: none !important; } }
+@media (min-width: 900px) { .narrow-only { display: none !important; } }
+
+/* Hover and focus states (style-hover / style-focus in the design). Like the
+   design runtime, they use !important to win over the inline styles. */
+.hv-lift:hover { transform: translateY(-2px) !important; }
+.hv-lift-lime:hover { transform: translateY(-2px) !important; color: #d2f25c !important; }
+.hv-border:hover { border-color: #d2f25c !important; }
+.hv-card:hover { border-color: #d2f25c !important; background-color: rgba(210,242,92,.04) !important; }
+.hv-fill:hover { background-size: 100% 100% !important; color: #0d1a17 !important; }
+.fc-line:focus { border-bottom-color: #d2f25c !important; }
+
+/* Print rules from the design runtime. */
+@media print {
+  @page { margin: 0.5cm; }
+  figure, table { break-inside: avoid; }
+  *, *::before, *::after {
+    print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+    animation-delay: -99s !important; animation-duration: .001s !important;
+    animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+    animation-play-state: running !important; transition-duration: 0s !important;
+  }
+}

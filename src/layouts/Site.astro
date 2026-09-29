@@ -1,0 +1,99 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/fonts.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Menu from '../components/Menu.astro';
+import Overlay from '../components/Overlay.astro';
+import Footer from '../components/Footer.astro';
+import { BASE, LANGS, DEFAULT_LANG, otherLang, path, pageMeta, type Lang, type LayoutPage, type Topic } from '../lib/i18n';
+import sofiaLatin from '../fonts/sofia-sans-latin.woff2?url';
+import condensedLatin from '../fonts/sofia-sans-extra-condensed-latin.woff2?url';
+import monoLatin from '../fonts/martian-mono-latin.woff2?url';
+import sofiaCyrillic from '../fonts/sofia-sans-cyrillic.woff2?url';
+import condensedCyrillic from '../fonts/sofia-sans-extra-condensed-cyrillic.woff2?url';
+import monoCyrillic from '../fonts/martian-mono-cyrillic.woff2?url';
+
+interface Props {
+  lang: Lang;
+  page: LayoutPage;
+  topic?: Topic | null;
+}
+
+const { lang, page, topic = null } = Astro.props;
+const { title, description } = pageMeta(page, lang, topic);
+
+// Absolute URLs need `site` (set by the deploy workflow); without it they stay root-relative.
+const abs = (p: string) => (Astro.site ? new URL(p, Astro.site).href : p);
+const indexable = page !== 'notfound';
+// Topic pages are the contact page with a different form preselected.
+const canonical = abs(path(lang, page));
+const alternates = LANGS.map((l) => ({ hreflang: l, href: abs(path(l, page)) }));
+const ogLocale = (l: Lang) => (l === 'bg' ? 'bg_BG' : 'en_GB');
+
+// Fonts the header and hero need straight away.
+const preloads = lang === 'bg'
+  ? [sofiaLatin, condensedLatin, monoLatin, sofiaCyrillic, condensedCyrillic, monoCyrillic]
+  : [sofiaLatin, condensedLatin, monoLatin];
+---
+
+<html lang={lang} data-page={page} transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {indexable && <link rel="canonical" href={canonical} />}
+    {indexable && alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    {indexable && <link rel="alternate" hreflang="x-default" href={abs(path(DEFAULT_LANG, page))} />}
+    {!indexable && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Fario" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={ogLocale(lang)} />
+    <meta property="og:locale:alternate" content={ogLocale(otherLang(lang))} />
+    {Astro.site && indexable && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#0d1a17" />
+    <link rel="icon" type="image/svg+xml" href={BASE + 'favicon.svg'} />
+    {preloads.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin="anonymous" />)}
+    <script is:inline define:vars={{ base: BASE }}>
+      (function () {
+        var d = document.documentElement, l = location, lang = d.lang, saved = null;
+        try { saved = localStorage.getItem('fario-lang'); } catch (e) {}
+        if (saved !== 'en' && saved !== 'bg') saved = null;
+        // Links to the old single-file site (…/#/history, …/#/contact/membership) open the real page.
+        var h = /^#\/([a-z]+)(?:\/([a-z]+))?/.exec(l.hash);
+        if (h) {
+          var pg = ['history', 'activities', 'achievements', 'contact'].indexOf(h[1]) > -1 ? h[1] : '';
+          var tp = pg === 'contact' && ['membership', 'competition', 'sponsorship', 'general'].indexOf(h[2]) > -1 ? h[2] : '';
+          l.replace(base + ((saved || lang) === 'bg' ? 'bg/' : '') + (pg ? pg + '/' : '') + (tp ? tp + '/' : '') + l.search);
+          return;
+        }
+        // As in the design, the language picked last time wins.
+        if (saved && saved !== lang && d.getAttribute('data-page') !== 'notfound') {
+          var p = l.pathname, bg = base + 'bg/';
+          var to = saved === 'bg' ? bg + p.slice(base.length) : p.indexOf(bg) === 0 ? base + p.slice(bg.length) : p;
+          if (to !== p) { l.replace(to + l.search + l.hash); return; }
+        }
+        // Keep the page blank until the page script has set up the intro animations.
+        d.classList.add('fario-boot');
+        setTimeout(function () { d.classList.remove('fario-boot'); }, 3000);
+      })();
+    </script>
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <div id="root" style="position:relative;min-height:100vh;background:#0d1a17;color:#eef1e8;font-family:'Sofia Sans',system-ui,sans-serif;overflow-x:clip">
+      <Header lang={lang} page={page} topic={topic} />
+      <Menu lang={lang} />
+      <Overlay />
+      <slot />
+      <Footer lang={lang} />
+    </div>
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>

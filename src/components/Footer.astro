@@ -1,0 +1,22 @@
+---
+import { pick, type Lang } from '../lib/i18n';
+import { EMAIL, FACEBOOK_URL, INSTAGRAM_URL } from '../config';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = pick(lang);
+---
+
+<footer id="site-footer" style="padding:clamp(80px,12vh,140px) clamp(20px,3.5vw,48px) 32px;overflow:hidden;border-top:1px solid rgba(238,241,232,.08)">
+  <div data-reveal="" style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(80px,18.5vw,330px);line-height:.8;letter-spacing:-.015em;text-transform:uppercase;color:#d2f25c;white-space:nowrap">{t('Tight lines.', 'Наслука!')}</div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px 32px;margin-top:clamp(40px,6vh,72px);padding-top:22px;border-top:1px solid rgba(238,241,232,.14);font-family:'Martian Mono',monospace;font-size:10.5px;line-height:1.7;letter-spacing:.08em;text-transform:uppercase;color:#a9b8ae">
+    <span>{t('Fario · fly fishing club', 'Фарио · клуб по риболов на муха')}</span>
+    <span>{t('Smolyan, Bulgaria', 'Смолян, България')}</span>
+    <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+    <span style="display:flex;gap:18px"><a href={FACEBOOK_URL} target="_blank" rel="noopener">Facebook</a><a href={INSTAGRAM_URL} target="_blank" rel="noopener">Instagram</a></span>
+    <span>© 2026 Fario</span>
+  </div>
+</footer>

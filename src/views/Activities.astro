@@ -1,0 +1,91 @@
+---
+import Site from '../layouts/Site.astro';
+import ImageSlot from '../components/ImageSlot.astro';
+import NextPage from '../components/NextPage.astro';
+import { activities } from '../data/activities';
+import { path, pick, type Lang } from '../lib/i18n';
+import { daysLabel, season, seasonDot, seasonText, todayText } from '../lib/season';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = pick(lang);
+const s = season();
+const kicker = "font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a9b8ae";
+const chip = 'padding:7px 12px;border:1px solid rgba(238,241,232,.3);border-radius:999px;font-family:\'Martian Mono\',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase';
+const chipRed = 'padding:7px 12px;border:1px solid #e2493b;border-radius:999px;font-family:\'Martian Mono\',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#ff8a78';
+const seasonRow = 'display:flex;gap:18px;padding:22px 0;border-top:1px solid rgba(238,241,232,.14)';
+const seasonName = "font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:32px;line-height:1;text-transform:uppercase";
+---
+
+<Site lang={lang} page="activities">
+<main>
+<section style="padding:clamp(130px,20vh,210px) clamp(20px,3.5vw,48px) 0">
+  <div data-hero="" style={kicker}>02 — <!---->{t('Activities', 'Дейности')}</div>
+  <h1 data-hero="" style="margin:22px 0 0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(88px,15vw,260px);line-height:.78;text-transform:uppercase;letter-spacing:-.015em">{t('What we do', 'Какво правим')}</h1>
+  <p data-hero="" style="margin:clamp(28px,4vh,44px) 0 0;max-width:640px;font-size:clamp(19px,1.5vw,23px);line-height:1.45;font-weight:300;color:#cdd6ce;text-wrap:pretty">{t('The club’s year follows the trout season.', 'Годината на клуба следва сезона на пъстървата.')}</p>
+</section>
+<canvas data-ridge="2" aria-hidden="true" style="display:block;width:100%;height:clamp(140px,20vh,220px)"></canvas>
+
+<section style="padding:clamp(80px,12vh,140px) clamp(20px,3.5vw,48px);display:flex;flex-wrap:wrap;align-items:center;gap:56px clamp(40px,7vw,120px)">
+  <div data-reveal="" data-dial="" style="position:relative;flex:0 1 520px;width:min(520px,100%);aspect-ratio:1">
+    <div data-dial-box data-morph-skip style="position:absolute;inset:0"></div>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;pointer-events:none">
+      <span data-season-days style={`font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(72px,9vw,120px);line-height:.85;color:${seasonDot(s)}`}>{s.days}</span>
+      <span data-days-label style="max-width:14ch;font-family:'Martian Mono',monospace;font-size:10px;line-height:1.5;letter-spacing:.08em;text-transform:uppercase;color:#a9b8ae">{daysLabel(lang, s)}</span>
+    </div>
+  </div>
+  <div style="flex:1 1 340px;display:flex;flex-direction:column">
+    <div data-reveal="" style={`padding-bottom:22px;${kicker}`}>{t('The season', 'Сезонът')}</div>
+    <div data-reveal="" style={seasonRow}>
+      <span style="flex:none;width:12px;height:12px;margin-top:8px;border-radius:50%;background:#d2f25c"></span>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style={seasonName}>{t('Open season', 'Разрешен риболов')}</span>
+        <span style="font-size:16px;line-height:1.5;color:#cdd6ce">{t('1 February – 30 September', '1 февруари – 30 септември')}</span>
+      </div>
+    </div>
+    <div data-reveal="" data-delay="100" style={seasonRow}>
+      <span style="flex:none;width:12px;height:12px;margin-top:8px;border-radius:50%;background:#e2493b"></span>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style={seasonName}>{t('Closed season', 'Забранен период')}</span>
+        <span style="font-size:16px;line-height:1.5;color:#cdd6ce">{t('1 October – 31 January. The brown trout spawn; we tie flies.', '1 октомври – 31 януари. Пъстървата хвърля хайвер, а ние връзваме мухи.')}</span>
+      </div>
+    </div>
+    <div data-reveal="" data-delay="200" style={`${seasonRow};border-bottom:1px solid rgba(238,241,232,.14)`}>
+      <span style="flex:none;width:12px;height:12px;margin-top:8px;border-radius:50%;background:#0d1a17;box-shadow:0 0 0 2px #eef1e8"></span>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style={seasonName}>{t('Today', 'Днес')}</span>
+        <span style="font-size:16px;line-height:1.5;color:#cdd6ce"><span data-today>{todayText(lang)}</span> · <span data-season-text>{seasonText(lang, s)}</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-top:1px solid rgba(238,241,232,.14)">
+  {activities.map((a, i) => {
+    const reverse = i % 2 === 1;
+    const last = i === activities.length - 1;
+    const text = (
+      <div data-reveal="" data-delay={reverse ? '120' : undefined} style="flex:1 1 420px;display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'Martian Mono',monospace;font-size:12px;color:#a9b8ae">{String(i + 1).padStart(2, '0')}</span><span style={a.tagTone === 'red' ? chipRed : chip}>{a.tag[lang]}</span></div>
+        <h2 style="margin:0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(60px,7vw,120px);line-height:.82;text-transform:uppercase">{a.title[lang]}</h2>
+        <p style="margin:0;font-size:18px;line-height:1.55;color:#cdd6ce;max-width:46ch">{a.text[lang]}</p>
+        <a href={path(lang, 'contact', a.link.topic)} style="align-self:flex-start;padding-bottom:4px;border-bottom:1px solid currentColor;font-weight:600;font-size:16px">{a.link.label[lang]}</a>
+      </div>
+    );
+    const photo = (
+      <div data-reveal="" data-delay={reverse ? undefined : '120'} style="flex:1 1 380px;aspect-ratio:4/3;background:#122420"><ImageSlot id={a.slot} placeholder={a.placeholder} alt={a.alt[lang]} /></div>
+    );
+    return (
+      <article style={`display:flex;flex-wrap:${reverse ? 'wrap-reverse' : 'wrap'};align-items:center;gap:36px clamp(40px,6vw,96px);padding:clamp(56px,9vh,110px) clamp(20px,3.5vw,48px)${last ? '' : ';border-bottom:1px solid rgba(238,241,232,.14)'}`}>
+        {reverse ? [photo, text] : [text, photo]}
+      </article>
+    );
+  })}
+</section>
+
+<NextPage href={path(lang, 'achievements')} kicker={t('Next — 03', 'Следва — 03')} title={t('Achievements →', 'Постижения →')} />
+</main>
+</Site>

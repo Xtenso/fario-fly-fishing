@@ -1,0 +1,22 @@
+---
+// GitHub Pages serves this for any unknown URL.
+import Site from '../layouts/Site.astro';
+import { path } from '../lib/i18n';
+
+const link = 'padding-bottom:4px;border-bottom:1px solid currentColor;font-weight:600;font-size:16px';
+---
+
+<Site lang="en" page="notfound">
+<main>
+<section style="padding:clamp(130px,20vh,210px) clamp(20px,3.5vw,48px) clamp(64px,9vh,110px)">
+  <div data-hero="" style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a9b8ae">404</div>
+  <h1 data-hero="" style="margin:22px 0 0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(88px,15vw,260px);line-height:.78;text-transform:uppercase;letter-spacing:-.015em">Page not found</h1>
+  <p data-hero="" lang="bg" style="margin:clamp(28px,4vh,44px) 0 0;max-width:640px;font-size:clamp(19px,1.5vw,23px);line-height:1.45;font-weight:300;color:#cdd6ce;text-wrap:pretty">Страницата не е намерена.</p>
+  <div data-hero="" style="display:flex;flex-wrap:wrap;gap:12px 32px;margin-top:clamp(28px,4vh,44px)">
+    <a href={path('en', 'home')} style={link}>Home →</a>
+    <a href={path('bg', 'home')} lang="bg" style={link}>Начало →</a>
+  </div>
+</section>
+<canvas data-ridge="1" aria-hidden="true" style="display:block;width:100%;height:clamp(140px,20vh,220px)"></canvas>
+</main>
+</Site>

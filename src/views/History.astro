@@ -1,0 +1,69 @@
+---
+import Site from '../layouts/Site.astro';
+import ImageSlot from '../components/ImageSlot.astro';
+import NextPage from '../components/NextPage.astro';
+import { timeline } from '../data/timeline';
+import { path, pick, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = pick(lang);
+const kicker = "font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a9b8ae";
+---
+
+<Site lang={lang} page="history">
+<main>
+<section style="padding:clamp(130px,20vh,210px) clamp(20px,3.5vw,48px) 0">
+  <div data-hero="" style={kicker}>01 — <!---->{t('History', 'История')}</div>
+  <h1 data-hero="" style="margin:22px 0 0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(88px,15vw,260px);line-height:.78;text-transform:uppercase;letter-spacing:-.015em">{t('Our story', 'Нашата история')}</h1>
+  <p data-hero="" style="margin:clamp(28px,4vh,44px) 0 0;max-width:640px;font-size:clamp(19px,1.5vw,23px);line-height:1.45;font-weight:300;color:#cdd6ce;text-wrap:pretty">{t('A fly fishing club from Smolyan, in the Central Rhodopes. Registered in 2020, national team champions in 2023.', 'Клуб по риболов на муха от Смолян, в Средните Родопи. Регистриран през 2020 г., отборен шампион на България през 2023 г.')}</p>
+</section>
+<canvas data-ridge="1" aria-hidden="true" style="display:block;width:100%;height:clamp(140px,20vh,220px)"></canvas>
+
+<section style="padding:clamp(80px,12vh,140px) clamp(20px,3.5vw,48px);display:flex;flex-wrap:wrap;align-items:center;gap:48px clamp(40px,6vw,96px)">
+  <div data-reveal="" style="flex:1 1 360px;display:flex;flex-direction:column;gap:22px">
+    <div style={kicker}>{t('The name', 'Името')}</div>
+    <div style="font-size:clamp(44px,5.4vw,88px);line-height:.95;font-weight:300;font-style:italic;letter-spacing:-.02em;color:#d2f25c">Salmo trutta fario</div>
+    <p style="margin:0;font-size:18px;line-height:1.55;color:#cdd6ce;max-width:46ch">{t('Fario comes from the Latin name of the brown trout — the fish of cold mountain streams, native to the rivers of the Rhodopes.', 'Фарио идва от латинското име на балканската пъстърва — рибата на студените планински потоци, родна за реките на Родопите.')}</p>
+  </div>
+  <div data-reveal="" data-delay="120" style="flex:1 1 380px;aspect-ratio:4/3;background:#122420">
+    <ImageSlot id="fario-history-trout" placeholder="Photo: a Rhodope brown trout" alt={t('A Rhodope brown trout', 'Балканска пъстърва от Родопите')} />
+  </div>
+</section>
+
+<section style="padding:0 clamp(20px,3.5vw,48px) clamp(80px,12vh,140px)">
+  <div data-reveal="" style={`padding-bottom:clamp(48px,7vh,80px);${kicker}`}>{t('Timeline', 'Хронология')}</div>
+  <div data-spine style="position:relative;padding-left:clamp(48px,8vw,140px)">
+    <span style="position:absolute;left:clamp(12px,2.6vw,44px);top:0;bottom:0;width:1px;background:rgba(238,241,232,.14)"></span>
+    <span data-spine-fill style="position:absolute;left:clamp(12px,2.6vw,44px);top:0;bottom:0;width:2px;margin-left:-.5px;background:#d2f25c;transform-origin:top;transform:scaleY(0)"></span>
+    <span data-spine-fly style="position:absolute;left:clamp(12px,2.6vw,44px);top:0;width:14px;height:14px;margin:-7px 0 0 -6.5px;border-radius:50%;background:#e2493b;box-shadow:0 0 0 3px #0d1a17,0 0 0 4.5px rgba(238,241,232,.55)"></span>
+    {timeline.map((e, i) => (
+      <article data-entry="" style={`display:flex;flex-wrap:wrap;gap:14px 48px;${i < timeline.length - 1 ? 'padding-bottom:clamp(72px,11vh,130px);' : ''}opacity:.38;transition:opacity .6s ease`}>
+        <div style={`flex:0 0 clamp(170px,18vw,290px);font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(76px,9vw,150px);line-height:.8${e.highlight ? ';color:#d2f25c' : ''}`}>{e.year}</div>
+        <div style="flex:1 1 360px;max-width:640px;display:flex;flex-direction:column;gap:14px;padding-top:4px">
+          <h3 style={`margin:0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:clamp(32px,3vw,46px);line-height:.95;text-transform:uppercase${e.highlight ? ';color:#d2f25c' : ''}`}>{e.title[lang]}</h3>
+          <p style="margin:0;font-size:18px;line-height:1.55;color:#cdd6ce">{e.text[lang]}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<section style="padding:clamp(80px,12vh,140px) clamp(20px,3.5vw,48px);border-top:1px solid rgba(238,241,232,.14);display:flex;flex-wrap:wrap;align-items:flex-end;gap:48px clamp(40px,6vw,96px)">
+  <div data-reveal="" style="flex:1 1 380px;aspect-ratio:3/2;background:#122420">
+    <ImageSlot id="fario-history-smolyan" placeholder="Photo: Smolyan and the Cherna reka" alt={t('Smolyan and the Cherna reka', 'Смолян и Черна река')} />
+  </div>
+  <div data-reveal="" data-delay="120" style="flex:1 1 360px;display:flex;flex-direction:column;gap:20px">
+    <div style={kicker}>{t('Home water', 'Домашна вода')}</div>
+    <div style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(72px,9vw,150px);line-height:.8;text-transform:uppercase">{t('Smolyan', 'Смолян')}</div>
+    <p style="margin:0;font-size:18px;line-height:1.55;color:#cdd6ce;max-width:44ch">{t('The club is based in Smolyan, on the Cherna reka, in the Central Rhodopes.', 'Клубът е базиран в Смолян, на Черна река, в Средните Родопи.')}</p>
+    <div style="font-family:'Martian Mono',monospace;font-size:11px;letter-spacing:.08em;color:#a9b8ae">41°35′N · 24°41′E</div>
+  </div>
+</section>
+
+<NextPage href={path(lang, 'activities')} kicker={t('Next — 02', 'Следва — 02')} title={t('Activities →', 'Дейности →')} />
+</main>
+</Site>

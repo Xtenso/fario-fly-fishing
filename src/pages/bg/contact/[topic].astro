@@ -1,0 +1,13 @@
+---
+// /contact/membership/, /contact/competition/ … open the contact page with that topic selected.
+import Contact from '../../../views/Contact.astro';
+import { TOPICS, type Topic } from '../../../lib/i18n';
+
+export function getStaticPaths() {
+  return TOPICS.map((topic) => ({ params: { topic } }));
+}
+
+const topic = Astro.params.topic as Topic;
+---
+
+<Contact lang="bg" topic={topic} />

@@ -1,0 +1,126 @@
+---
+import Site from '../layouts/Site.astro';
+import { FLY_LINE } from '../config';
+import { BASE, path, pick, type Lang, type Page } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = pick(lang);
+const en = lang === 'en';
+const word = en ? ['F', 'A', 'R', 'I', 'O'] : ['Ф', 'А', 'Р', 'И', 'О'];
+const mapSrc = `${BASE}map/?theme=night${en ? '' : '&lang=bg'}`;
+
+const explore: [Page, string, string, string][] = [
+  ['history', '01', t('History', 'История'), t('How a team from Smolyan became national champions.', 'Как един отбор от Смолян стана шампион на България.')],
+  ['activities', '02', t('Activities', 'Дейности'), t('Competitions, fly tying, stocking and trips abroad.', 'Състезания, връзване на мухи, зарибяване и пътувания в чужбина.')],
+  ['achievements', '03', t('Achievements', 'Постижения'), t('Every podium since 2019.', 'Всички подиуми от 2019 г. насам.')],
+];
+const kicker = "font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a9b8ae";
+const card = 'flex:1 1 360px;display:flex;flex-direction:column;gap:18px;padding:clamp(28px,3vw,44px);border:1px solid rgba(238,241,232,.16);transition:border-color .3s ease,background-color .3s ease';
+---
+
+<Site lang={lang} page="home">
+<main>
+<section data-hero-section style="position:relative;height:100vh;min-height:640px;max-height:1080px;overflow:hidden;background:#0d1a17">
+  <canvas data-hero-back style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
+  <div style="position:absolute;z-index:1;top:0;bottom:0;left:clamp(6px,1.6vw,24px);display:flex;align-items:center;pointer-events:none">
+    <h1 data-word aria-label="Fario" style="margin:0;writing-mode:vertical-rl;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;color:#eef1e8;white-space:nowrap;letter-spacing:-.01em">
+      <span data-morph-style style={`display:block;font-size:${en ? 'min(40vh,28vw)' : 'min(34vh,24vw)'};line-height:.74`}>{word.map((l) => <span data-l="" style="display:inline-block">{l}</span>)}</span>
+    </h1>
+  </div>
+  <canvas data-hero-front style="position:absolute;z-index:2;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
+  <div data-hero="" style="position:absolute;z-index:3;top:clamp(84px,12vh,120px);right:clamp(20px,3.5vw,48px);text-align:right;font-family:'Martian Mono',monospace;font-size:10.5px;line-height:1.9;letter-spacing:.1em;text-transform:uppercase;color:#a9b8ae">
+    <div style="color:#eef1e8">{t('Snezhanka & Perelik from Rozhen', 'Снежанка и Перелик от Рожен')}</div>
+    <div>41°42′N · 24°44′E</div>
+    <div>{t('Central Rhodopes', 'Средни Родопи')}</div>
+  </div>
+  <div style="position:absolute;z-index:3;right:clamp(20px,3.5vw,48px);bottom:clamp(28px,7vh,72px);width:min(500px,calc(100% - 40px));display:flex;flex-direction:column;gap:22px">
+    <div data-hero="" style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a9b8ae">{t('Fly fishing club · Smolyan, Bulgaria', 'Клуб по риболов на муха · Смолян')}</div>
+    <p data-hero="" style="margin:0;font-size:clamp(20px,1.7vw,25px);line-height:1.35;font-weight:300;text-wrap:pretty">{t('A fly fishing club from Smolyan. We fish the mountain rivers of the Central Rhodopes and compete for the club in the national championship.', 'Клуб по риболов на муха от Смолян. Ловим по планинските реки на Средните Родопи и се състезаваме за клуба в републиканския шампионат.')}</p>
+    <div data-hero="" style="display:flex;flex-wrap:wrap;gap:12px">
+      <a href={path(lang, 'contact', 'membership')} class="hv-lift" style="display:inline-flex;align-items:center;gap:10px;padding:15px 22px;background:#d2f25c;border-radius:999px;font-weight:600;font-size:15px;transition:transform .3s ease"><span style="color:#0d1a17">{t('Become a member', 'Стани член')}</span><span style="color:#0d1a17">→</span></a>
+      <button type="button" data-to-waters class="hv-border" style="display:inline-flex;align-items:center;gap:10px;padding:15px 22px;background:transparent;color:#eef1e8;border:1px solid rgba(238,241,232,.3);border-radius:999px;font-family:inherit;font-weight:500;font-size:15px;cursor:pointer;transition:border-color .3s ease">{t('Explore the waters', 'Разгледай реките')}<span>↓</span></button>
+    </div>
+    {FLY_LINE && (
+      <div data-fly-hint hidden style="font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.08em;color:#7d8f86">{t('Move to cast · click to land the fly', 'Движете, за да замятате · кликнете, за да кацне мухата')}</div>
+    )}
+  </div>
+  <canvas data-hero-line style="position:absolute;z-index:4;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
+</section>
+
+<section style="padding:clamp(100px,15vh,180px) clamp(20px,3.5vw,48px) clamp(64px,9vh,110px);display:flex;flex-wrap:wrap;gap:28px 40px">
+  <div data-reveal="" style={`flex:1 1 200px;padding-top:14px;${kicker}`}>{t('The name', 'Името')}</div>
+  <div style="flex:4 1 560px;display:flex;flex-direction:column;gap:34px">
+    <p data-reveal="" data-delay="100" style="margin:0;font-size:clamp(30px,3.8vw,60px);line-height:1.08;font-weight:300;letter-spacing:-.015em;text-wrap:pretty">{en
+      ? <Fragment>Fario comes from <em style="font-style:italic;color:#d2f25c">Salmo trutta fario</em> — the brown trout of cold mountain streams, native to the rivers of the Rhodopes.</Fragment>
+      : <Fragment>Фарио идва от <em style="font-style:italic;color:#d2f25c">Salmo trutta fario</em> — балканската пъстърва на студените планински потоци, родна за реките на Родопите.</Fragment>}</p>
+    <a data-reveal="" data-delay="200" href={path(lang, 'history')} style="align-self:flex-start;padding-bottom:4px;border-bottom:1px solid currentColor;font-weight:600;font-size:16px">{t('Our history →', 'Нашата история →')}</a>
+  </div>
+</section>
+
+<section style="padding:0 clamp(20px,3.5vw,48px) clamp(100px,15vh,180px)">
+  <a data-reveal="" href={path(lang, 'achievements')} style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px 48px;padding-top:36px;border-top:1px solid rgba(238,241,232,.14)">
+    <span style="display:flex;flex-direction:column;gap:18px">
+      <span style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#d2f25c">{t('2023 · Vacha river', '2023 · р. Въча')}</span>
+      <span style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(88px,15vw,250px);line-height:.78;text-transform:uppercase;color:#d2f25c;letter-spacing:-.015em">{t('Champions', 'Шампиони')}</span>
+    </span>
+    <span style="flex:0 1 420px;display:flex;flex-direction:column;gap:18px">
+      <span style="font-size:18px;line-height:1.55;color:#cdd6ce">{t('National team champions after three rounds on the Vacha, with individual silver and bronze.', 'Отборни шампиони на България след три кръга на р. Въча, с индивидуално сребро и бронз.')}</span>
+      <span style="font-weight:600;font-size:16px">{t('All results →', 'Всички резултати →')}</span>
+    </span>
+  </a>
+</section>
+
+<section id="waters" style="scroll-margin-top:64px">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px;padding:0 clamp(20px,3.5vw,48px) 40px">
+    <div data-reveal="" style="display:flex;flex-direction:column;gap:18px">
+      <div style={kicker}>{t('The waters', 'Реките')}</div>
+      <h2 style="margin:0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(72px,11vw,184px);line-height:.8;text-transform:uppercase;letter-spacing:-.01em">{t('Where we fish', 'Къде ловим')}</h2>
+    </div>
+    <p data-reveal="" data-delay="120" style="flex:0 1 420px;margin:0;font-size:18px;line-height:1.5;color:#cdd6ce">{t('Six beats across the Rhodopes, from our home river in Smolyan to the championship water on the Vacha. Select a beat for species and rules.', 'Шест участъка в Родопите — от реката ни в Смолян до състезателната вода на Въча. Изберете участък за видове и режим.')}</p>
+  </div>
+  <div style="position:relative;height:clamp(560px,86vh,860px);border-top:1px solid rgba(238,241,232,.12);border-bottom:1px solid rgba(238,241,232,.12);background:#0d1a17">
+    <iframe data-map data-morph-keep="src" src={mapSrc} title="Map of the Rhodope waters" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0;display:block"></iframe>
+  </div>
+</section>
+
+<section style="padding:clamp(100px,15vh,180px) 0 0">
+  <div data-reveal="" style={`padding:0 clamp(20px,3.5vw,48px) 36px;${kicker}`}>{t('Explore the club', 'Разгледай клуба')}</div>
+  <div style="border-top:1px solid rgba(238,241,232,.14)">
+    {explore.map(([page, n, title, text]) => (
+      <a data-reveal="" href={path(lang, page)} class="hv-fill" style="display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 40px;padding:34px clamp(20px,3.5vw,48px);border-bottom:1px solid rgba(238,241,232,.14);background-image:linear-gradient(#d2f25c,#d2f25c);background-repeat:no-repeat;background-position:0 0;background-size:0% 100%;transition:background-size .7s cubic-bezier(.7,0,.2,1),color .4s ease">
+        <span style="flex:0 0 48px;font-family:'Martian Mono',monospace;font-size:12px">{n}</span>
+        <span style="flex:1 1 300px;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:clamp(48px,6vw,96px);line-height:.9;text-transform:uppercase">{title}</span>
+        <span style="flex:1 1 320px;max-width:480px;font-size:17px;line-height:1.5">{text}</span>
+        <span style="flex:0 0 auto;font-size:28px;line-height:1">→</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section style="padding:clamp(100px,15vh,180px) clamp(20px,3.5vw,48px)">
+  <h2 data-reveal="" style="margin:0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(72px,11vw,184px);line-height:.8;text-transform:uppercase;letter-spacing:-.01em">{t('Join the club', 'Присъедини се')}</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:clamp(40px,6vh,72px)">
+    <a href={path(lang, 'contact', 'membership')} data-reveal="" class="hv-card" style={card}>
+      <span style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#a9b8ae">{t('For anglers', 'За риболовци')}</span>
+      <span style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:clamp(44px,4.4vw,68px);line-height:.9;text-transform:uppercase;color:#eef1e8">{t('Membership', 'Членство')}</span>
+      <span style="font-size:17px;line-height:1.5;color:#cdd6ce;max-width:40ch">{t('For fly anglers of every level, from first casts to competition.', 'За мухари от всяко ниво — от първите замятания до състезанията.')}</span>
+      <span style="margin-top:auto;padding-top:12px;font-weight:600;color:#d2f25c">{t('Apply →', 'Кандидатствай →')}</span>
+    </a>
+    <a href={path(lang, 'contact', 'sponsorship')} data-reveal="" data-delay="120" class="hv-card" style={card}>
+      <span style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#a9b8ae">{t('For partners', 'За партньори')}</span>
+      <span style="font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:clamp(44px,4.4vw,68px);line-height:.9;text-transform:uppercase;color:#eef1e8">{t('Sponsors & partners', 'Спонсори и партньори')}</span>
+      <span style="font-size:17px;line-height:1.5;color:#cdd6ce;max-width:40ch">{t('Support a competing club and the rivers it fishes.', 'Подкрепете състезаващ се клуб и реките, по които лови.')}</span>
+      <span style="margin-top:auto;padding-top:12px;font-weight:600;color:#d2f25c">{t('Get in touch →', 'Свържете се →')}</span>
+    </a>
+  </div>
+  <div data-reveal="" style="display:flex;flex-wrap:wrap;gap:12px 32px;margin-top:28px;font-size:16px;font-weight:600">
+    <a href={path(lang, 'contact', 'competition')} style="padding-bottom:3px;border-bottom:1px solid rgba(238,241,232,.35)">{t('Competition registration →', 'Записване за състезание →')}</a>
+    <a href={path(lang, 'contact', 'general')} style="padding-bottom:3px;border-bottom:1px solid rgba(238,241,232,.35)">{t('General inquiry →', 'Общо запитване →')}</a>
+  </div>
+</section>
+</main>
+</Site>

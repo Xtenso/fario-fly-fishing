@@ -1,0 +1,94 @@
+---
+import Site from '../layouts/Site.astro';
+import ImageSlot from '../components/ImageSlot.astro';
+import NextPage from '../components/NextPage.astro';
+import { results } from '../data/results';
+import { team } from '../data/team';
+import { path, pick, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = pick(lang);
+const kicker = "font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a9b8ae";
+const podiumLabel = "font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase";
+const podiumName = "font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:40px;line-height:1;text-transform:uppercase";
+const line = 'rgba(238,241,232,.14)';
+---
+
+<Site lang={lang} page="achievements">
+<main>
+<section style="padding:clamp(130px,20vh,210px) clamp(20px,3.5vw,48px) 0">
+  <div data-hero="" style={kicker}>03 — <!---->{t('Achievements', 'Постижения')}</div>
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:32px 48px;margin-top:22px">
+    <h1 data-hero="" style="margin:0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(88px,16vw,280px);line-height:.78;text-transform:uppercase;color:#d2f25c;letter-spacing:-.015em">{t('Champions', 'Шампиони')}</h1>
+    <p data-hero="" style="flex:0 1 440px;margin:0;font-size:18px;line-height:1.55;color:#cdd6ce">{t('Ognyan Bachochev and Alexander Metodiev won the 2023 national team title over three rounds on the Vacha, in a field of 30 anglers from six clubs, and finished second and third individually.', 'Огнян Бачочев и Александър Методиев спечелиха отборната титла за 2023 г. след три кръга на р. Въча, в конкуренция на 30 състезатели от шест клуба, и завършиха втори и трети индивидуално.')}</p>
+  </div>
+</section>
+<canvas data-ridge="3" aria-hidden="true" style="display:block;width:100%;height:clamp(140px,20vh,220px)"></canvas>
+
+<section style="padding:clamp(80px,12vh,140px) clamp(20px,3.5vw,48px)">
+  <div data-reveal="" style={kicker}>{t('Bulgarian championship 2023 · final standings', 'Републикански шампионат 2023 · крайно класиране')}</div>
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:48px clamp(40px,6vw,96px);margin-top:clamp(40px,6vh,64px)">
+    <div data-reveal="" style="display:flex;flex-direction:column;gap:18px">
+      <span data-pop="" style="width:clamp(180px,19vw,280px);aspect-ratio:1;border-radius:50%;background:#d2f25c;color:#0d1a17;display:grid;place-items:center;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(120px,12vw,180px);line-height:1">1</span>
+      <span style={`${podiumLabel};color:#d2f25c`}>{t('Team', 'Отборно')}</span>
+      <span style={podiumName}>{t('Fario 1', 'Фарио 1')}</span>
+    </div>
+    <div data-reveal="" data-delay="120" style="display:flex;flex-direction:column;gap:18px">
+      <span data-pop="" style="width:clamp(130px,13vw,190px);aspect-ratio:1;border-radius:50%;box-shadow:inset 0 0 0 2px #eef1e8;display:grid;place-items:center;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(84px,8vw,120px);line-height:1">2</span>
+      <span style={`${podiumLabel};color:#a9b8ae`}>{t('Individual', 'Индивидуално')}</span>
+      <span style={podiumName}>{t('Ognyan Bachochev', 'Огнян Бачочев')}</span>
+    </div>
+    <div data-reveal="" data-delay="240" style="display:flex;flex-direction:column;gap:18px">
+      <span data-pop="" style="width:clamp(110px,11vw,160px);aspect-ratio:1;border-radius:50%;box-shadow:inset 0 0 0 2px #eef1e8;display:grid;place-items:center;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(70px,7vw,100px);line-height:1">3</span>
+      <span style={`${podiumLabel};color:#a9b8ae`}>{t('Individual', 'Индивидуално')}</span>
+      <span style={podiumName}>{t('Alexander Metodiev', 'Александър Методиев')}</span>
+    </div>
+  </div>
+</section>
+
+<section style="padding:0 clamp(20px,3.5vw,48px) clamp(100px,15vh,170px)">
+  <div data-reveal="" style={`padding-bottom:22px;${kicker}`}>{t('All results', 'Всички резултати')}</div>
+  <div style={`border-top:1px solid ${line}`}>
+    {results.map((r) => (
+      <div data-reveal="" style={`display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 32px;padding:26px 0;border-bottom:1px solid ${line}`}>
+        <div style={`flex:0 0 110px;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:800;font-size:44px;line-height:1${r.highlight ? ';color:#d2f25c' : ''}`}>{r.year}</div>
+        <div style="flex:1 1 320px;font-size:19px;line-height:1.35">{r.event[lang]}<div style="margin-top:4px;font-size:15px;color:#a9b8ae">{r.place[lang]}</div></div>
+        <div style={`flex:1 1 260px;font-family:'Martian Mono',monospace;font-size:12px;line-height:1.8${r.highlight ? ';color:#d2f25c' : ''}`}>{r.result[lang].map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}</div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<section style={`padding:clamp(80px,12vh,140px) clamp(20px,3.5vw,48px);border-top:1px solid ${line}`}>
+  <div data-reveal="" style={kicker}>{t('The team', 'Отборът')}</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:56px 40px;max-width:1120px;margin-top:clamp(40px,6vh,64px)">
+    {team.map((m, i) => (
+      <article data-reveal="" data-delay={i ? String(i * 120) : undefined} style="display:flex;flex-direction:column;gap:22px">
+        <div style="aspect-ratio:1;background:#122420"><ImageSlot id={m.slot} placeholder={m.placeholder} alt={m.name[lang]} sizes="(max-width: 899px) 100vw, 560px" /></div>
+        <h3 style="margin:0;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(44px,4.4vw,64px);line-height:.88;text-transform:uppercase">{m.name[lang]}</h3>
+        <div style={`border-top:1px solid ${line}`}>
+          {m.placings.map((p) => (
+            <div style={`display:flex;gap:18px;padding:13px 0;border-bottom:1px solid ${line};font-size:16px;line-height:1.4`}><span style={`flex:0 0 56px;font-family:'Martian Mono',monospace;font-size:12px;line-height:1.7;color:${p.highlight ? '#d2f25c' : '#a9b8ae'}`}>{p.rank[lang]}</span><span>{p.text[lang]}</span></div>
+          ))}
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<section style="padding:clamp(100px,15vh,180px) clamp(20px,3.5vw,48px);background:#d2f25c;color:#0d1a17">
+  <div data-reveal="" style="font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#0d1a17">{t('For sponsors', 'За спонсори')}</div>
+  <h2 data-reveal="" style="margin:22px 0 0;max-width:12ch;font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(64px,10vw,170px);line-height:.8;text-transform:uppercase;letter-spacing:-.01em;color:#0d1a17">{t('Partner with a championship team', 'Станете партньор на шампионски отбор')}</h2>
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px 48px;margin-top:clamp(36px,5vh,56px)">
+    <p data-reveal="" style="margin:0;max-width:520px;font-size:19px;line-height:1.5;color:#0d1a17">{t('Support Fario at the national championship and on the rivers we look after.', 'Подкрепете Фарио на републиканския шампионат и по реките, за които се грижим.')}</p>
+    <a data-reveal="" href={path(lang, 'contact', 'sponsorship')} class="hv-lift-lime" style="display:inline-flex;align-items:center;gap:10px;padding:17px 26px;background:#0d1a17;border-radius:999px;font-weight:600;font-size:16px;color:#eef1e8;transition:transform .3s ease">{t('Sponsorship enquiry →', 'Запитване за партньорство →')}</a>
+  </div>
+</section>
+
+<NextPage href={path(lang, 'contact')} kicker={t('Next — 04', 'Следва — 04')} title={t('Contact →', 'Контакт →')} border={false} />
+</main>
+</Site>

@@ -1,0 +1,28 @@
+---
+import { path, pick, type Lang, type Page } from '../lib/i18n';
+import { season, seasonDot, seasonText } from '../lib/season';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = pick(lang);
+const s = season();
+
+const items: [Page, string][] = [
+  ['home', t('Home', 'Начало')],
+  ['history', t('History', 'История')],
+  ['activities', t('Activities', 'Дейности')],
+  ['achievements', t('Achievements', 'Постижения')],
+  ['contact', t('Contact', 'Контакт')],
+];
+const item = "font-family:'Sofia Sans Extra Condensed',sans-serif;font-weight:900;font-size:clamp(56px,16vw,104px);line-height:.92;text-transform:uppercase";
+---
+
+<div data-menu hidden style="position:fixed;inset:0;z-index:45;background:#0d1a17;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:100px 20px 36px;box-sizing:border-box">
+  {items.map(([p, label]) => (
+    <a data-mi="" href={path(lang, p)} style={p === 'contact' ? item + ';color:#d2f25c' : item}>{label}</a>
+  ))}
+  <div data-mi="" style="display:flex;align-items:center;gap:9px;margin-top:28px;font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.03em;color:#cdd6ce"><span data-season-dot style={`flex:none;width:7px;height:7px;border-radius:50%;background:${seasonDot(s)}`}></span><span data-season-text>{seasonText(lang, s)}</span></div>
+</div>
